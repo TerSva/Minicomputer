@@ -1,0 +1,89 @@
+Vytvořím ti úplně nový e-shop pro minicomputer.cz — český obchod s mini PC, herními konzolemi a příslušenstvím. Styl je dark tech, premium, inspirovaný apple.com a nothing.tech.
+
+DESIGNOVÝ PŘÍSTUP — "SCROLLYTELLING PRODUCT THEATER":
+Web funguje jako filmový zážitek. Každý scroll je nový "záběr". Produkt je hrdina příběhu. Žádné nudné gridy — místo toho plynulý příběh při skrolování.
+
+TECHNICKÝ STACK:
+- React + Vite + TypeScript
+- Tailwind CSS
+- Framer Motion pro animace
+- Zustand pro state management (košík)
+- React Router pro routing
+
+DESIGN TOKENY (z Visual Booku):
+- Pozadí: #0A0A0F (primary), #111118 (secondary), #1A1A24 (cards)
+- Accent: #00E5FF (cyan), #7C4DFF (purple), gradient 135deg mezi nimi
+- Text: #F0F0F5 (primary), #9494A8 (secondary)
+- Fonty: 'Space Grotesk' pro nadpisy, 'DM Sans' pro body, 'JetBrains Mono' pro specs
+- Border: rgba(255,255,255,0.08) subtle, rgba(0,229,255,0.30) accent
+- Radius: 6px (sm), 10px (md), 16px (lg), 24px (xl)
+- Shadows: glow efekt — 0 0 20px rgba(0,229,255,0.15)
+
+STRUKTURA STRÁNEK:
+
+1. HOMEPAGE — "Scrollytelling Hero":
+   - Full-screen hero s jedním produktem. Velký nadpis "Malý počítač. Velký výkon." s gradientovým textem (cyan→purple). Pod tím krátký popisek a dva CTA tlačítka: "Prozkoumat" (primary cyan) a "Nakoupit" (ghost border).
+   - Při scrollu dolů se produkt "přibližuje" (scale animace) a postupně se odkrývají specifikace — každý spec (RAM, CPU, SSD) se animuje jako fade-up s 100ms stagger delay.
+   - Trust bar pod hero: 4 ikonky v řadě — "Doprava zdarma", "Garance vrácení", "Podpora 24/7", "Bezpečná platba". Minimalistické, monoline ikony.
+   - Sekce "Proč mini PC?" — Scrollytelling: Jak uživatel skroluje, obrázek mini PC se otáčí a vedle se postupně objevují benefity (úspora energie, tichý provoz, kompaktní design). Každý benefit má ikonu, nadpis a jednu větu.
+   - Featured produkty — NE klasický grid, ale horizontální scroll carousel s velkými kartami (min 350px šířka). Každá karta: obrázek nahoře s gradient overlay, badge ("NOVINKA" / "SLEVA"), název, klíčové specs jedním řádkem v mono fontu, cena, a "Do košíku" tlačítko s ikonou.
+   - Social proof sekce: 3 recenze v bento grid layoutu. Jedna velká (2 sloupce), dvě menší. Hvězdičky, jméno, text.
+   - Newsletter CTA: Gradient background (subtle), nadpis "Buďte první", input + tlačítko.
+   - Footer: 4-sloupcový (O nás, Obchod, Podpora, Kontakt), logo, social ikony, copyright.
+
+2. SHOP PAGE — Katalog:
+   - Sticky header s breadcrumbs a počtem produktů
+   - Sidebar filtry (desktop): Kategorie (Mini PC, Konzole, Příslušenství), Cena (range slider), Výrobce, Hodnocení. Filtry jsou collapsible accordiony.
+   - Produktový grid: 3 sloupce na desktopu, 2 na tabletu, 1 na mobilu.
+   - Produktové karty mají hover efekt: translateY(-4px) + cyan border glow + shadow. Při hoveru se tlačítko "Do košíku" rozbalí z ikony na plný text.
+   - Infinite scroll nebo "Načíst další" tlačítko.
+   - Mobile: Filtry se otevírají jako bottom sheet overlay.
+
+3. PRODUCT DETAIL PAGE:
+   - Sticky "Koupit" bar nahoře při scrollu (cena + tlačítko vždy viditelné).
+   - Galerie vlevo (velký obrázek + thumbnaily), info vpravo.
+   - Sekce specs: Bento grid s parametry — každý parametr v samostatné "krabičce" s ikonou a hodnotou. Např: CPU ikon + "AMD Ryzen 7 7735HS", RAM ikon + "32 GB DDR5".
+   - Tab navigace pod specs: "Popis", "Specifikace", "Recenze".
+   - "Ostatní si také koupili" carousel dole.
+   - Interaktivní srovnání: Pokud existují varianty produktu, slider ukazující rozdíl ve výkonu.
+
+4. KOŠÍK + CHECKOUT (single page flow):
+   - Košík jako slide-in panel z pravé strany (ne celá stránka).
+   - Checkout je 3-step wizard: 1) Doprava, 2) Platba, 3) Shrnutí. Progress bar nahoře.
+   - Cena a doprava viditelné od začátku — žádné skryté poplatky.
+   - Express platby nahoře (Apple Pay, Google Pay ikony).
+   - Order summary sticky na pravé straně desktopu.
+
+5. DALŠÍ STRÁNKY:
+   - O nás: Příběh značky, timeline, hodnoty.
+   - FAQ: Accordion s animací.
+   - Kontakt: Formulář + mapa + kontaktní info.
+
+HOVER A ANIMAČNÍ EFEKTY:
+- Všechny karty: translateY(-4px) + border glow na hover, transition 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+- CTA tlačítka: subtle scale(1.02) + zvýraznění shadow na hover
+- Page sections: fade-up animace při scrollu (IntersectionObserver), stagger 100ms
+- Cart badge: bounce animace při přidání do košíku
+- Navigace: blur backdrop-filter, průhledná, změní se na solid při scrollu
+- Produkt detail: parallax efekt na product image při scrollu
+- Loading states: skeleton loading s pulse animací
+- Page transitions: fade between routes
+
+MOBILNÍ DESIGN:
+- Hamburger menu s full-screen overlay (animace slide-in)
+- Sticky bottom bar s košíkem a hlavní CTA
+- Swipeable carousely
+- Bottom sheet pro filtry
+- Touch-friendly velikosti (min 44px tap targets)
+
+DŮLEŽITÉ:
+- Web musí být plně v ČEŠTINĚ
+- Použij mock data pro produkty (5-8 mini PC, 2-3 konzole, 3-4 příslušenství)
+- Košík musí být funkční (přidání, odebrání, změna množství)
+- Checkout flow musí být interaktivní (ne jen statický)
+- Responzivní od 320px do 1920px+
+- Smooth scroll chování
+- Lazy loading obrázků
+- Používej placeholder obrázky (gradient boxy nebo SVG placeholdery stylované v dark theme)
+
+Postav kompletní funkční prototyp.
