@@ -1,0 +1,83 @@
+/* BENTO GRID SYSTEM - Custom CSS for precise layout */
+.bentoContainer {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-flow: dense;
+  gap: 16px;
+  width: 100%;
+}
+
+.bentoCard {
+  background: #1A1A24;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bentoCardSmall {
+  border-radius: 10px;
+}
+
+/* Hover effects */
+.bentoCardHoverable:hover {
+  border-color: rgba(0, 229, 255, 0.30);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+  transform: translateY(-2px);
+  z-index: 10;
+}
+
+/* Grid Spans */
+.colSpan12 { grid-column: span 12; }
+.colSpan8 { grid-column: span 8; }
+.colSpan6 { grid-column: span 6; }
+.colSpan4 { grid-column: span 4; }
+.colSpan3 { grid-column: span 3; }
+.colSpan2 { grid-column: span 2; }
+
+/* Desktop overrides or specific heights if needed */
+.rowSpan2 { grid-row: span 2; }
+.rowSpan3 { grid-row: span 3; }
+
+/* Tablet Breakpoint */
+@media (max-width: 1024px) {
+  .bentoGrid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+  .colSpan8, .colSpan6, .colSpan4, .colSpan3 { grid-column: span 4; }
+  .colSpan12 { grid-column: span 8; }
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 768px) {
+  .bentoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bentoContainer {
+    padding: 16px;
+    padding-bottom: 80px; /* space for mobile nav */
+  }
+  .bentoCard {
+    padding: 16px;
+  }
+  .colSpan12, .colSpan8, .colSpan6, .colSpan4, .colSpan3 { grid-column: span 2; }
+}
+
+/* Small Mobile Breakpoint */
+@media (max-width: 480px) {
+  .bentoGrid {
+    grid-template-columns: 1fr;
+  }
+  .colSpan12, .colSpan8, .colSpan6, .colSpan4, .colSpan3 { grid-column: span 1; }
+}

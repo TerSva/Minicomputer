@@ -1,0 +1,99 @@
+Nejprve si prohlédni aktuální web: https://www.minicomputer.cz
+Prozkoumej homepage, shop stránku (https://www.minicomputer.cz/shop) a alespoň jeden product detail. Použij reálné produkty, ceny a texty z aktuálního webu jako základ pro nový design.
+
+Vytvořím ti e-shop pro minicomputer.cz s kompletně odlišným přístupem od klasických e-shopů. Design je založen na BENTO GRID systému — celá stránka je složená z modulárních "widgetů" různých velikostí, jako dashboard nebo iOS home screen.
+
+DESIGNOVÝ PŘÍSTUP — "BENTO DASHBOARD E-SHOP":
+Každá sekce stránky je widget/karta s jedním účelem. Žádné plynulé scrollytelling — místo toho jasná vizuální hierarchie skrze velikost bloků. Velký blok = důležité. Malý blok = doplňkové. Inspirace: nzxt.com PC builder, Apple widget design.
+
+TECHNICKÝ STACK:
+- React + Vite + TypeScript
+- CSS Modules (NE Tailwind — čistý custom CSS pro precizní kontrolu gridu)
+- GSAP pro animace
+- Context API pro state management
+- React Router
+
+DESIGN TOKENY:
+(stejné jako Visual Book — #0A0A0F pozadí, #00E5FF cyan, #7C4DFF purple, Space Grotesk/DM Sans/JetBrains Mono)
+
+Přidej tyto specifické tokeny pro Bento:
+- Card gap: 16px
+- Card padding: 24px
+- Card background: #1A1A24 s 1px border rgba(255,255,255,0.08)
+- Card hover: border změní na rgba(0,229,255,0.30), box-shadow 0 0 20px rgba(0,229,255,0.15), transform translateY(-2px)
+- Card radius: 16px (velké karty), 10px (menší)
+
+STRUKTURA — HOMEPAGE:
+
+Celá homepage je jeden velký Bento Grid. Představ si mřížku 12 sloupců, kde každý widget zabírá různý počet sloupců a řádků:
+
+Řada 1 (Hero oblast):
+- [8 sloupců] HERO WIDGET: Velký featured produkt s velkým nadpisem "Budoucnost na dlani", popiskem, cenou a CTA "Koupit nyní". Obrázek produktu s ambient glow efektem (radial gradient za produktem v barvě cyan).
+- [4 sloupce] STATS WIDGET: Vertikální stack 3 čísel: "2,500+ spokojených zákazníků", "24h expedice", "3 roky záruka". Každé číslo s animovaným počítadlem (countUp efekt při scrollu do view).
+
+Řada 2 (Quick actions):
+- [3 sloupce] KATEGORIE widget: "Mini PC" s ikonou a počtem produktů, klikací
+- [3 sloupce] KATEGORIE widget: "Konzole" s ikonou a počtem produktů
+- [3 sloupce] KATEGORIE widget: "Příslušenství" s ikonou a počtem produktů
+- [3 sloupce] PROMO widget: "Doprava zdarma nad 3 999 Kč" s gradient pozadím
+
+Řada 3 (Products):
+- [4 sloupce] PRODUKT KARTA: Kompaktní — obrázek, název, cena, mini-specs tag (např. "Ryzen 7 | 32GB"), quick-add tlačítko
+- [4 sloupce] PRODUKT KARTA: Jiný produkt
+- [4 sloupce] PRODUKT KARTA: Jiný produkt
+
+Řada 4 (Mixed):
+- [6 sloupců] SROVNÁNÍ widget: Interaktivní slider — "Office vs Gaming" s dvěma produkty vedle sebe, highlight rozdílů
+- [6 sloupců] RECENZE widget: Velký citát od zákazníka, 5 hvězdiček, jméno, verifikovaný nákup badge
+
+Řada 5:
+- [4 sloupce] BLOG widget: Náhled posledního článku
+- [4 sloupce] FAQ widget: 3 nejčastější otázky s expand/collapse
+- [4 sloupce] NEWSLETTER widget: Email input + "Odebírat" tlačítko s gradient pozadím
+
+KLÍČOVÝ EFEKT — "BENTO REVEAL":
+Při prvním loadu stránky se widgety objevují s staggered animací — jeden po druhém, fade-up + scale(0.95→1), delay 50ms mezi widgety. Efekt evokuje, že se dashboard "skládá" před očima.
+
+SHOP PAGE:
+- Stejný Bento přístup — produkty jsou ve widgetech
+- Filtry jsou v horní liště jako "chip" buttony (klikací tagy): "Všechny", "Mini PC", "Konzole", "Do 5000 Kč", "Ryzen", "Intel"
+- Sorting: dropdown v rohu
+- Grid se přeuspořádá s animací (layout animation) při filtrování
+
+PRODUCT DETAIL:
+- Opět Bento layout:
+  - [8 sloupců] Galerie (velký obrázek s thumbnaily pod ním)
+  - [4 sloupce] Nákupní box (název, cena, množství, CTA, express pay)
+  - [4 sloupce] Specs widget (parametry v mini kartách)
+  - [4 sloupce] Hodnocení widget (průměr + distribuce hvězd)
+  - [4 sloupce] Doprava widget ("Objednáte dnes, doručíme ve středu")
+  - [12 sloupců] Popis (tab/accordion)
+  - [12 sloupců] Related products carousel
+
+KOŠÍK:
+- Modal overlay (ne sidebar, ne stránka) — centrální panel s blur pozadím
+- Produkty v seznamu, každý s obrázkem, názvem, cenou, quantity +-
+- Sticky CTA bar dole: celková cena + "K pokladně"
+- Micro-animace: při odebrání produktu — slide-out vlevo s fade
+
+CHECKOUT:
+- Stepper nahoře: ① Doprava → ② Platba → ③ Hotovo
+- Formulář je také v Bento kartách — adresa v jednom bloku, doprava v druhém, platba v třetím
+- Real-time update celkové ceny v pravém sloupci
+
+ANIMACE:
+- Bento Reveal: staggered fade-up při page load (GSAP stagger)
+- Hover: karty se "zvednou" — translateY(-2px) + glow border
+- Filter: layout shuffle animace (GSAP Flip)
+- Scroll: jednotlivé sekce se animují při vstupu do viewportu
+- Cart: produkty slide-in/slide-out
+- Počítadla: countUp animace na číslech
+- Tlačítka: ripple efekt při kliknutí (Material-style, ale v cyan)
+
+MOBILE:
+- Bento grid se přeuspořádá na 1-2 sloupce
+- Swipe gestures na kartách produktů
+- Bottom navigation bar (Domů, Obchod, Košík, Účet) s ikonami
+- Pull-to-refresh na shop stránce
+
+Použij mock data pro 10+ produktů. Všechno v ČEŠTINĚ. Plně funkční košík a checkout. Responzivní design.
