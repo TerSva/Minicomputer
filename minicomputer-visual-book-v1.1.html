@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minicomputer.cz — Visual Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* --- RESET & BASE --- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Primary Palette — Dark Tech */
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #111118;
+    --bg-tertiary: #18181F;
+    --bg-card: #1A1A24;
+    --bg-card-hover: #22222E;
+    --bg-elevated: #202030;
+
+    /* Accent — Electric Cyan */
+    --accent-primary: #00E5FF;
+    --accent-primary-soft: rgba(0, 229, 255, 0.12);
+    --accent-primary-glow: rgba(0, 229, 255, 0.25);
+    --accent-secondary: #7C4DFF;
+    --accent-secondary-soft: rgba(124, 77, 255, 0.12);
+    --accent-gradient: linear-gradient(135deg, #00E5FF 0%, #7C4DFF 100%);
+    --accent-gradient-soft: linear-gradient(135deg, rgba(0,229,255,0.15) 0%, rgba(124,77,255,0.15) 100%);
+
+    /* Status Colors */
+    --success: #00E676;
+    --warning: #FFD600;
+    --error: #FF5252;
+    --info: #448AFF;
+
+    /* Text */
+    --text-primary: #F0F0F5;
+    --text-secondary: #9494A8;
+    --text-tertiary: #7A7A90;
+    --text-inverse: #0A0A0F;
+
+    /* Borders */
+    --border-subtle: rgba(255,255,255,0.08);
+    --border-default: rgba(255,255,255,0.15);
+    --border-accent: rgba(0,229,255,0.30);
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+    --space-4xl: 96px;
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+    --shadow-glow: 0 0 20px rgba(0,229,255,0.15);
+
+    /* Typography */
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- NAV --- */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 var(--space-2xl);
+    display: flex; align-items: center; height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 700; font-size: 14px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-links {
+    margin-left: auto; display: flex; gap: var(--space-lg);
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-secondary); text-decoration: none;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent-primary); }
+
+  /* --- SECTIONS --- */
+  .section {
+    padding: var(--space-4xl) var(--space-2xl);
+    max-width: 1200px; margin: 0 auto;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .section:first-of-type { padding-top: 120px; }
+
+  .section-label {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent-primary); margin-bottom: var(--space-sm);
+    display: flex; align-items: center; gap: var(--space-sm);
+  }
+  .section-label::before {
+    content: ''; width: 24px; height: 1px; background: var(--accent-primary);
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1.2; margin-bottom: var(--space-lg);
+  }
+  .section-desc {
+    color: var(--text-secondary); font-size: 16px;
+    max-width: 640px; line-height: 1.7; margin-bottom: var(--space-3xl);
+  }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    position: relative; overflow: hidden;
+    padding: var(--space-4xl) var(--space-2xl);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 30% 20%, rgba(0,229,255,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 70% 80%, rgba(124,77,255,0.05) 0%, transparent 70%);
+  }
+  .hero-badge {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent-primary); padding: 6px 16px;
+    border: 1px solid var(--border-accent); border-radius: var(--radius-full);
+    margin-bottom: var(--space-xl); position: relative;
+    background: var(--accent-primary-soft);
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+    position: relative; margin-bottom: var(--space-lg);
+  }
+  .hero h1 span {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 18px; color: var(--text-secondary); max-width: 560px;
+    position: relative; line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex; gap: var(--space-2xl); margin-top: var(--space-3xl);
+    position: relative;
+  }
+  .hero-meta-item {
+    text-align: center;
+  }
+  .hero-meta-item strong {
+    font-family: var(--font-display); font-size: 24px;
+    display: block; margin-bottom: 4px;
+  }
+  .hero-meta-item span {
+    font-size: 12px; color: var(--text-tertiary);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  /* --- GRID HELPERS --- */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-xl); }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--space-lg); }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-lg); }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+
+  /* --- COLOR SWATCHES --- */
+  .swatch-group { margin-bottom: var(--space-2xl); }
+  .swatch-group-title {
+    font-family: var(--font-display); font-size: 14px;
+    font-weight: 600; margin-bottom: var(--space-md);
+    color: var(--text-secondary); letter-spacing: 0.03em;
+  }
+  .swatch {
+    border-radius: var(--radius-lg);
+    overflow: hidden; border: 1px solid var(--border-subtle);
+  }
+  .swatch-color {
+    height: 100px; position: relative;
+  }
+  .swatch-info {
+    padding: var(--space-md);
+    background: var(--bg-card);
+  }
+  .swatch-name {
+    font-weight: 600; font-size: 13px; margin-bottom: 2px;
+  }
+  .swatch-hex {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* --- TYPOGRAPHY SPECIMENS --- */
+  .type-specimen {
+    padding: var(--space-xl) 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .type-specimen:last-child { border-bottom: none; }
+  .type-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: var(--space-md);
+  }
+  .type-label {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--text-tertiary); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .type-specs {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  .type-display {
+    font-family: var(--font-display);
+  }
+  .type-body {
+    font-family: var(--font-body);
+  }
+
+  /* --- COMPONENT CARDS --- */
+  .component-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    transition: all 0.3s ease;
+  }
+  .component-card:hover {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  .component-card h4 {
+    font-family: var(--font-display); font-size: 15px;
+    font-weight: 600; margin-bottom: var(--space-sm);
+  }
+  .component-card p {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+
+  /* --- BUTTONS --- */
+  .btn-row { display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center; margin-bottom: var(--space-xl); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 14px; letter-spacing: 0.01em;
+    padding: 12px 24px; border-radius: var(--radius-md);
+    border: none; cursor: pointer; transition: all 0.25s ease;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--accent-primary); color: var(--text-inverse);
+    box-shadow: 0 2px 12px rgba(0,229,255,0.25);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 4px 24px rgba(0,229,255,0.4);
+    transform: translateY(-1px);
+    background: #33EBFF;
+  }
+  .btn-gradient {
+    background: var(--accent-gradient); color: var(--text-inverse);
+    box-shadow: 0 2px 12px rgba(0,229,255,0.20);
+  }
+  .btn-gradient:hover {
+    box-shadow: 0 4px 24px rgba(124,77,255,0.35);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: var(--bg-card); color: var(--text-primary);
+    border: 1px solid var(--border-default);
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary-soft);
+  }
+  .btn-ghost {
+    background: transparent; color: var(--accent-primary);
+    border: 1px solid var(--border-accent);
+  }
+  .btn-ghost:hover {
+    background: var(--accent-primary-soft);
+  }
+  .btn-sm { padding: 8px 16px; font-size: 13px; }
+  .btn-lg { padding: 16px 32px; font-size: 16px; }
+
+  /* --- PRODUCT CARD DEMO --- */
+  .product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+  }
+  .product-card:hover {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-glow), var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+  .product-img {
+    background: var(--bg-tertiary);
+    height: 220px; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .product-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, var(--bg-card) 100%);
+  }
+  .product-img-placeholder {
+    width: 120px; height: 120px;
+    background: var(--accent-gradient-soft);
+    border-radius: var(--radius-lg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+  }
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: var(--radius-full);
+    z-index: 1;
+  }
+  .badge-new { background: var(--accent-primary); color: var(--text-inverse); }
+  .badge-sale { background: var(--error); color: white; }
+  .badge-hot { background: var(--warning); color: var(--text-inverse); }
+
+  .product-info { padding: var(--space-lg); }
+  .product-category {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--accent-primary); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: var(--space-xs);
+  }
+  .product-name {
+    font-family: var(--font-display); font-size: 16px;
+    font-weight: 600; margin-bottom: var(--space-sm);
+    line-height: 1.3;
+  }
+  .product-specs {
+    font-size: 12px; color: var(--text-tertiary);
+    margin-bottom: var(--space-md); line-height: 1.5;
+  }
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: var(--space-sm);
+  }
+  .product-price {
+    font-family: var(--font-display); font-size: 20px;
+    font-weight: 700;
+  }
+  .product-price .old {
+    font-size: 13px; color: var(--text-tertiary);
+    text-decoration: line-through; font-weight: 400; margin-left: 6px;
+  }
+  .product-cart-btn {
+    min-height: 44px; padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--accent-primary);
+    color: var(--text-inverse); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: var(--font-display); font-size: 13px; font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 10px rgba(0,229,255,0.20);
+  }
+  .product-cart-btn:hover {
+    background: #33EBFF; color: var(--text-inverse);
+    box-shadow: 0 4px 20px rgba(0,229,255,0.35);
+    transform: translateY(-1px);
+  }
+  .product-cart-btn svg {
+    width: 16px; height: 16px; flex-shrink: 0;
+  }
+
+  /* --- INSIGHT BLOCK --- */
+  .insight {
+    background: var(--accent-gradient-soft);
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin: var(--space-2xl) 0;
+  }
+  .insight-label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent-primary); margin-bottom: var(--space-sm);
+  }
+  .insight h4 {
+    font-family: var(--font-display); font-size: 18px;
+    font-weight: 600; margin-bottom: var(--space-sm);
+  }
+  .insight p {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+  }
+
+  /* --- PERSONA CARDS --- */
+  .persona-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+  }
+  .persona-avatar {
+    width: 56px; height: 56px; border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: var(--space-md);
+  }
+  .persona-card h4 {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 15px; margin-bottom: 2px;
+  }
+  .persona-card .persona-role {
+    font-size: 12px; color: var(--accent-primary);
+    font-family: var(--font-mono); letter-spacing: 0.05em;
+    margin-bottom: var(--space-md);
+  }
+  .persona-card p {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .persona-needs {
+    margin-top: var(--space-md); display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .persona-tag {
+    font-size: 11px; padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+  }
+
+  /* --- SPACING DEMO --- */
+  .spacing-row {
+    display: flex; align-items: center; gap: var(--space-lg);
+    margin-bottom: var(--space-md);
+  }
+  .spacing-box {
+    background: var(--accent-primary-soft);
+    border: 1px solid var(--border-accent);
+    border-radius: 4px;
+    height: 32px;
+  }
+  .spacing-label {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--text-tertiary); min-width: 80px;
+  }
+  .spacing-value {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--text-secondary); min-width: 50px;
+  }
+
+  /* --- ICON SYSTEM DEMO --- */
+  .icon-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--space-md);
+  }
+  .icon-item {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: var(--space-md); border-radius: var(--radius-md);
+    background: var(--bg-card); border: 1px solid var(--border-subtle);
+    transition: all 0.2s;
+  }
+  .icon-item:hover { border-color: var(--border-accent); }
+  .icon-item svg { width: 24px; height: 24px; color: var(--text-primary); }
+  .icon-item span {
+    font-size: 10px; color: var(--text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  /* --- WIREFRAME --- */
+  .wireframe {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .wf-header {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .wf-block {
+    background: var(--bg-tertiary); border-radius: var(--radius-sm);
+    height: 12px;
+  }
+  .wf-hero-area {
+    padding: var(--space-3xl) var(--space-lg);
+    display: flex; align-items: center; gap: var(--space-xl);
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+  }
+  .wf-product-grid {
+    padding: var(--space-xl) var(--space-lg);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md);
+  }
+  .wf-product-item {
+    background: var(--bg-tertiary); border-radius: var(--radius-md);
+    aspect-ratio: 3/4; border: 1px solid var(--border-subtle);
+  }
+
+  /* --- INPUT FIELDS --- */
+  .input-demo {
+    display: flex; flex-direction: column; gap: var(--space-md);
+  }
+  .input-field {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 360px;
+  }
+  .input-field:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-primary-soft);
+  }
+  .input-field::placeholder { color: var(--text-tertiary); }
+
+  .input-label {
+    font-size: 12px; font-weight: 600;
+    color: var(--text-secondary); margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  /* --- FOOTER NOTE --- */
+  .footer-note {
+    text-align: center; padding: var(--space-4xl) var(--space-2xl);
+    color: var(--text-tertiary); font-size: 13px;
+  }
+  .footer-note strong {
+    color: var(--text-secondary);
+  }
+
+  /* --- ANIMATION --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate { animation: fadeUp 0.6s ease forwards; }
+
+  /* --- TOC --- */
+  .toc {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md); margin-top: var(--space-xl);
+  }
+  .toc-item {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: var(--space-sm);
+  }
+  .toc-item:hover {
+    border-color: var(--border-accent);
+    color: var(--text-primary);
+  }
+  .toc-num {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--accent-primary); min-width: 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">Minicomputer.cz — Visual Book</div>
+  <ul class="nav-links">
+    <li><a href="#strategy">Strategie</a></li>
+    <li><a href="#colors">Barvy</a></li>
+    <li><a href="#typography">Typografie</a></li>
+    <li><a href="#components">Komponenty</a></li>
+    <li><a href="#layout">Layout</a></li>
+    <li><a href="#products">Produkty</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">Visual Design System — v1.1 (WCAG + CRO)</div>
+  <h1>minicomputer<span>.cz</span></h1>
+  <p>Kompletní designový systém pro moderní e-shop s mini počítači. Zaměřeno na konverze, přehlednost a technologický feel.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <strong>E-shop</strong>
+      <span>Typ projektu</span>
+    </div>
+    <div class="hero-meta-item">
+      <strong>Mini PC</strong>
+      <span>Segment</span>
+    </div>
+    <div class="hero-meta-item">
+      <strong>CZ</strong>
+      <span>Trh</span>
+    </div>
+    <div class="hero-meta-item">
+      <strong>2025</strong>
+      <span>Redesign</span>
+    </div>
+  </div>
+</header>
+
+<!-- 01: STRATEGY & TARGET AUDIENCE -->
+<section class="section" id="strategy">
+  <div class="section-label">01 — Strategie & Cílová skupina</div>
+  <div class="section-title">Pro koho a proč designujeme</div>
+  <div class="section-desc">
+    Minicomputer.cz prodává kompaktní mini PC (GESEURO a další), herní konzole a příslušenství. Cílíme na tech-savvy zákazníky v Česku, kteří hledají výkonná a kompaktní řešení za rozumnou cenu.
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">📊 Analýza současného stavu</div>
+    <h4>Co je potřeba změnit</h4>
+    <p>Aktuální web používá generickou WooCommerce gaming šablonu s Lorem Ipsum texty, nekonsistentní navigací (mix CZ/EN), chybějícími produktovými fotkami a nulovou brand identity. Redesign musí přinést profesionalitu, důvěru a konverzní optimalizaci — protože u e-shopu rozhodují mikrosekundy.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: var(--space-2xl);">
+    <div class="persona-card">
+      <div class="persona-avatar" style="background: var(--accent-primary-soft);">🧑‍💻</div>
+      <h4>Tech Enthusiast</h4>
+      <div class="persona-role">25–40 let • IT / Developer</div>
+      <p>Hledá kompaktní pracovní stanici nebo HTPC. Rozumí specifikacím, chce detail. Porovnává na Heurece, Alze.</p>
+      <div class="persona-needs">
+        <span class="persona-tag">Detailní specifikace</span>
+        <span class="persona-tag">Porovnání modelů</span>
+        <span class="persona-tag">Recenze</span>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-avatar" style="background: var(--accent-secondary-soft);">🎮</div>
+      <h4>Casual Gamer</h4>
+      <div class="persona-role">18–35 let • Student / Zaměstnanec</div>
+      <p>Chce levnější alternativu ke klasickému PC na hraní. Zajímá ho poměr cena/výkon a co rozběhne.</p>
+      <div class="persona-needs">
+        <span class="persona-tag">Herní výkon</span>
+        <span class="persona-tag">Cena/výkon</span>
+        <span class="persona-tag">Jednoduchost</span>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-avatar" style="background: rgba(0,230,118,0.12);">🏢</div>
+      <h4>Small Business</h4>
+      <div class="persona-role">30–55 let • Majitel / IT správce</div>
+      <p>Potřebuje tiché, kompaktní PC do kanceláře nebo na display. Cení spolehlivost, záruku, fakturaci.</p>
+      <div class="persona-needs">
+        <span class="persona-tag">Firemní fakturace</span>
+        <span class="persona-tag">Záruka</span>
+        <span class="persona-tag">Bulk objednávky</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">🎯 Designové principy</div>
+    <h4>Čím se řídíme</h4>
+    <p>
+      <strong>1. Konverze nad vším</strong> — Každý pixel vede k nákupu. CTA tlačítka, trust signály, jasná cesta.<br>
+      <strong>2. Tech-forward estetika</strong> — Tmavý režim, ostré hrany, neonové akcenty. Produkty jsou tech, design to musí reflektovat.<br>
+      <strong>3. Transparentnost</strong> — Jasné ceny, specifikace, dostupnost, doprava. Žádné překvapení.<br>
+      <strong>4. Mobilní priorita</strong> — 70%+ traffic je z mobilu. Každý komponent musí fungovat touch-first.
+    </p>
+  </div>
+</section>
+
+<!-- 02: COLOR SYSTEM -->
+<section class="section" id="colors">
+  <div class="section-label">02 — Barevný systém</div>
+  <div class="section-title">Barvy, které prodávají technologii</div>
+  <div class="section-desc">
+    Tmavá paleta evokuje prémiový tech feel. Cyan accent vytváří energii a jasně odlišuje interaktivní elementy. Fialový sekundární akcent přidává hloubku a modernost.
+  </div>
+
+  <div class="swatch-group">
+    <div class="swatch-group-title">Základní pozadí</div>
+    <div class="grid-5">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #0A0A0F;"></div>
+        <div class="swatch-info"><div class="swatch-name">Primary BG</div><div class="swatch-hex">#0A0A0F</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #111118;"></div>
+        <div class="swatch-info"><div class="swatch-name">Secondary BG</div><div class="swatch-hex">#111118</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #18181F;"></div>
+        <div class="swatch-info"><div class="swatch-name">Tertiary BG</div><div class="swatch-hex">#18181F</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #1A1A24;"></div>
+        <div class="swatch-info"><div class="swatch-name">Card BG</div><div class="swatch-hex">#1A1A24</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #202030;"></div>
+        <div class="swatch-info"><div class="swatch-name">Elevated BG</div><div class="swatch-hex">#202030</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch-group">
+    <div class="swatch-group-title">Akcentní barvy</div>
+    <div class="grid-4">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #00E5FF;"></div>
+        <div class="swatch-info"><div class="swatch-name">Electric Cyan</div><div class="swatch-hex">#00E5FF</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #7C4DFF;"></div>
+        <div class="swatch-info"><div class="swatch-name">Deep Purple</div><div class="swatch-hex">#7C4DFF</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: linear-gradient(135deg, #00E5FF, #7C4DFF);"></div>
+        <div class="swatch-info"><div class="swatch-name">Gradient Accent</div><div class="swatch-hex">Cyan → Purple</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: rgba(0,229,255,0.12);"></div>
+        <div class="swatch-info"><div class="swatch-name">Cyan Soft</div><div class="swatch-hex">12% opacity</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch-group">
+    <div class="swatch-group-title">Stavové barvy</div>
+    <div class="grid-4">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #00E676;"></div>
+        <div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#00E676</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #FFD600;"></div>
+        <div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#FFD600</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #FF5252;"></div>
+        <div class="swatch-info"><div class="swatch-name">Error / Sale</div><div class="swatch-hex">#FF5252</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #448AFF;"></div>
+        <div class="swatch-info"><div class="swatch-name">Info</div><div class="swatch-hex">#448AFF</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch-group">
+    <div class="swatch-group-title">Text & Borders</div>
+    <div class="grid-4">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #F0F0F5;"></div>
+        <div class="swatch-info"><div class="swatch-name">Text Primary</div><div class="swatch-hex">#F0F0F5</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #9494A8;"></div>
+        <div class="swatch-info"><div class="swatch-name">Text Secondary</div><div class="swatch-hex">#9494A8</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #7A7A90;"></div>
+        <div class="swatch-info"><div class="swatch-name">Text Tertiary</div><div class="swatch-hex">#7A7A90</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);"></div>
+        <div class="swatch-info"><div class="swatch-name">Border Default</div><div class="swatch-hex">15% white</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03: TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">03 — Typografie</div>
+  <div class="section-title">Tři fonty, tři role</div>
+  <div class="section-desc">
+    Space Grotesk pro nadpisy — geometrický, moderní, technický. DM Sans pro body text — čistý, čitelný, přátelský. JetBrains Mono pro technická data — specifikace, ceny, kódy.
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-meta">
+      <span class="type-label">Display / Headings</span>
+      <span class="type-specs">Space Grotesk • 700</span>
+    </div>
+    <div class="type-display" style="font-size: 48px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;">
+      Kompaktní výkon bez kompromisů
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-meta">
+      <span class="type-label">H2 — Section Title</span>
+      <span class="type-specs">Space Grotesk • 600 • 32px</span>
+    </div>
+    <div class="type-display" style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em;">
+      Nejprodávanější mini počítače
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-meta">
+      <span class="type-label">H3 — Card Title</span>
+      <span class="type-specs">Space Grotesk • 600 • 18px</span>
+    </div>
+    <div class="type-display" style="font-size: 18px; font-weight: 600;">
+      GESEURO WizBox G — AMD Ryzen 7 7735HS
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-meta">
+      <span class="type-label">Body Text</span>
+      <span class="type-specs">DM Sans • 400 • 16px • 1.7 line-height</span>
+    </div>
+    <div class="type-body" style="font-size: 16px; color: var(--text-secondary); max-width: 560px; line-height: 1.7;">
+      Minicomputer.cz nabízí výběr kompaktních počítačů, které se vejdou kamkoliv — na stůl, za monitor, do obýváku. Vysoký výkon v malém těle, tichý provoz a nízká spotřeba.
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-meta">
+      <span class="type-label">Mono — Specs & Prices</span>
+      <span class="type-specs">JetBrains Mono • 500 • 14px</span>
+    </div>
+    <div style="font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--accent-primary);">
+      AMD Ryzen 7 7735HS • 16GB DDR5 • 512GB NVMe • 2 900 Kč
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-meta">
+      <span class="type-label">Small / Labels</span>
+      <span class="type-specs">JetBrains Mono • 500 • 11px • uppercase</span>
+    </div>
+    <div style="font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-tertiary);">
+      SKLADEM • DOPRAVA ZDARMA • ZÁRUKA 24 MĚSÍCŮ
+    </div>
+  </div>
+</section>
+
+<!-- 04: SPACING & RADIUS -->
+<section class="section" id="spacing">
+  <div class="section-label">04 — Spacing & Border Radius</div>
+  <div class="section-title">Konzistentní vzdálenosti</div>
+  <div class="section-desc">8px grid systém zajistí vizuální harmonii napříč celým designem.</div>
+
+  <div class="grid-2">
+    <div>
+      <div class="swatch-group-title" style="margin-bottom: var(--space-lg);">Spacing Scale</div>
+      <div class="spacing-row">
+        <span class="spacing-label">xs</span>
+        <div class="spacing-box" style="width: 4px;"></div>
+        <span class="spacing-value">4px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">sm</span>
+        <div class="spacing-box" style="width: 8px;"></div>
+        <span class="spacing-value">8px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">md</span>
+        <div class="spacing-box" style="width: 16px;"></div>
+        <span class="spacing-value">16px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">lg</span>
+        <div class="spacing-box" style="width: 24px;"></div>
+        <span class="spacing-value">24px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">xl</span>
+        <div class="spacing-box" style="width: 32px;"></div>
+        <span class="spacing-value">32px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">2xl</span>
+        <div class="spacing-box" style="width: 48px;"></div>
+        <span class="spacing-value">48px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">3xl</span>
+        <div class="spacing-box" style="width: 64px;"></div>
+        <span class="spacing-value">64px</span>
+      </div>
+      <div class="spacing-row">
+        <span class="spacing-label">4xl</span>
+        <div class="spacing-box" style="width: 96px;"></div>
+        <span class="spacing-value">96px</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="swatch-group-title" style="margin-bottom: var(--space-lg);">Border Radius</div>
+      <div style="display: flex; gap: var(--space-lg); flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div style="width: 64px; height: 64px; background: var(--accent-primary-soft); border: 1px solid var(--border-accent); border-radius: 6px; margin-bottom: 8px;"></div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">sm / 6px</span>
+        </div>
+        <div style="text-align: center;">
+          <div style="width: 64px; height: 64px; background: var(--accent-primary-soft); border: 1px solid var(--border-accent); border-radius: 10px; margin-bottom: 8px;"></div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">md / 10px</span>
+        </div>
+        <div style="text-align: center;">
+          <div style="width: 64px; height: 64px; background: var(--accent-primary-soft); border: 1px solid var(--border-accent); border-radius: 16px; margin-bottom: 8px;"></div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">lg / 16px</span>
+        </div>
+        <div style="text-align: center;">
+          <div style="width: 64px; height: 64px; background: var(--accent-primary-soft); border: 1px solid var(--border-accent); border-radius: 24px; margin-bottom: 8px;"></div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">xl / 24px</span>
+        </div>
+        <div style="text-align: center;">
+          <div style="width: 64px; height: 64px; background: var(--accent-primary-soft); border: 1px solid var(--border-accent); border-radius: 9999px; margin-bottom: 8px;"></div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">full / pill</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05: COMPONENTS -->
+<section class="section" id="components">
+  <div class="section-label">05 — Komponenty</div>
+  <div class="section-title">UI Kit — klíčové stavební bloky</div>
+  <div class="section-desc">
+    Každý komponent je navržen pro maximální konverzi a přehlednost. Hover stavy, glow efekty a micro-interakce posilují prémiový tech pocit.
+  </div>
+
+  <!-- Buttons -->
+  <div class="swatch-group-title">Tlačítka</div>
+  <div class="btn-row">
+    <button class="btn btn-primary">Přidat do košíku</button>
+    <button class="btn btn-gradient">Prozkoumat nabídku</button>
+    <button class="btn btn-secondary">Porovnat</button>
+    <button class="btn btn-ghost">Více info</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary btn-sm">Koupit</button>
+    <button class="btn btn-primary btn-lg">Dokončit objednávku →</button>
+  </div>
+
+  <!-- Inputs -->
+  <div class="swatch-group-title" style="margin-top: var(--space-2xl);">Formulářové prvky</div>
+  <div class="input-demo">
+    <div>
+      <div class="input-label">E-mail</div>
+      <input class="input-field" type="email" placeholder="vas@email.cz">
+    </div>
+    <div>
+      <div class="input-label">Hledat produkt</div>
+      <input class="input-field" type="search" placeholder="Např. Ryzen 7, WizBox, 16GB RAM...">
+    </div>
+  </div>
+
+  <!-- Badges -->
+  <div class="swatch-group-title" style="margin-top: var(--space-2xl);">Produktové badge</div>
+  <div class="btn-row">
+    <span class="product-badge badge-new" style="position: static;">NOVINKA</span>
+    <span class="product-badge badge-sale" style="position: static;">-30%</span>
+    <span class="product-badge badge-hot" style="position: static;">BESTSELLER</span>
+    <span class="product-badge" style="position: static; background: var(--success); color: var(--text-inverse);">SKLADEM</span>
+  </div>
+
+  <!-- Trust Signals -->
+  <div class="swatch-group-title" style="margin-top: var(--space-2xl);">Trust signály</div>
+  <div class="grid-4">
+    <div class="component-card" style="text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">🚚</div>
+      <h4>Doprava zdarma</h4>
+      <p>Nad 3 999 Kč</p>
+    </div>
+    <div class="component-card" style="text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">↩️</div>
+      <h4>14 dní na vrácení</h4>
+      <p>Bez udání důvodu</p>
+    </div>
+    <div class="component-card" style="text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">🛡️</div>
+      <h4>Záruka 24 měsíců</h4>
+      <p>Plná záruční podpora</p>
+    </div>
+    <div class="component-card" style="text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">💳</div>
+      <h4>Bezpečná platba</h4>
+      <p>Kartou, PayPal, převodem</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06: PRODUCT CARDS -->
+<section class="section" id="products">
+  <div class="section-label">06 — Produktové karty</div>
+  <div class="section-title">Srdce e-shopu</div>
+  <div class="section-desc">
+    Produktová karta musí okamžitě sdělit: co to je, kolik to stojí a jak to koupím. Hover efekt s glow zvyšuje interaktivitu. Spec labels v mono fontu pro technický detail.
+  </div>
+
+  <div class="grid-3">
+    <!-- Product 1 -->
+    <div class="product-card">
+      <div class="product-img">
+        <span class="product-badge badge-new">NOVINKA</span>
+        <div class="product-img-placeholder">💻</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Mini PC</div>
+        <div class="product-name">GESEURO WizBox G</div>
+        <div class="product-specs">AMD Ryzen 7 7735HS • 16GB DDR5 • 512GB NVMe</div>
+        <div class="product-footer">
+          <div class="product-price">
+            2 900 Kč
+          </div>
+          <button class="product-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Do košíku</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <div class="product-img">
+        <span class="product-badge badge-sale">-30%</span>
+        <div class="product-img-placeholder">🖥️</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Mini PC</div>
+        <div class="product-name">GESEURO NonBox G</div>
+        <div class="product-specs">AMD Ryzen 5 8645HS • 8GB DDR5 • 256GB NVMe</div>
+        <div class="product-footer">
+          <div class="product-price">
+            2 030 Kč <span class="old">2 900 Kč</span>
+          </div>
+          <button class="product-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Do košíku</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="product-img">
+        <span class="product-badge badge-hot">BESTSELLER</span>
+        <div class="product-img-placeholder">⌨️</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Příslušenství</div>
+        <div class="product-name">Wireless Combo Kit</div>
+        <div class="product-specs">Klávesnice + myš • Bluetooth 5.0 • USB-C</div>
+        <div class="product-footer">
+          <div class="product-price">
+            890 Kč
+          </div>
+          <button class="product-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Do košíku</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight" style="margin-top: var(--space-2xl);">
+    <div class="insight-label">🔍 Konverzní detaily produktové karty</div>
+    <h4>Proč takhle</h4>
+    <p>
+      <strong>Hover glow</strong> — cyan border glow navádí oko a vytváří pocit interaktivity.<br>
+      <strong>Mono font na specs</strong> — technické údaje vypadají profesionálně a důvěryhodně.<br>
+      <strong>Plnohodnotné CTA „Do košíku"</strong> — textové tlačítko s ikonkou košíku, min. 44px touch target (WCAG), solidní cyan pozadí = maximální viditelnost hlavní akce.<br>
+      <strong>Badge systém</strong> — okamžitá segmentace: novinka, sleva, bestseller.<br>
+      <strong>Gradient overlay na obrázku</strong> — plynulý přechod do card body, žádná tvrdá hrana.
+    </p>
+  </div>
+</section>
+
+<!-- 07: PAGE LAYOUT -->
+<section class="section" id="layout">
+  <div class="section-label">07 — Wireframe & Layout</div>
+  <div class="section-title">Struktura stránek</div>
+  <div class="section-desc">
+    Homepage wireframe ukazuje tok od hero banneru přes trust signály k produktové mřížce. Každá sekce má jasný účel v konverzním funnelu.
+  </div>
+
+  <div class="wireframe">
+    <!-- Header -->
+    <div class="wf-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="wf-block" style="width: 100px; background: var(--accent-primary); opacity: 0.5;"></div>
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <div class="wf-block" style="width: 50px;"></div>
+        <div class="wf-block" style="width: 50px;"></div>
+        <div class="wf-block" style="width: 50px;"></div>
+        <div class="wf-block" style="width: 50px;"></div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <div class="wf-block" style="width: 100px;"></div>
+        <div style="width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--bg-tertiary);"></div>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="wf-hero-area">
+      <div style="flex: 1;">
+        <div class="wf-block" style="width: 60%; height: 16px; margin-bottom: 12px; background: var(--accent-primary); opacity: 0.3;"></div>
+        <div class="wf-block" style="width: 80%; height: 24px; margin-bottom: 8px;"></div>
+        <div class="wf-block" style="width: 70%; height: 24px; margin-bottom: 16px;"></div>
+        <div class="wf-block" style="width: 50%; height: 12px; margin-bottom: 24px;"></div>
+        <div style="display: flex; gap: 12px;">
+          <div class="wf-block" style="width: 120px; height: 40px; border-radius: var(--radius-md); background: var(--accent-primary); opacity: 0.4;"></div>
+          <div class="wf-block" style="width: 100px; height: 40px; border-radius: var(--radius-md);"></div>
+        </div>
+      </div>
+      <div style="width: 200px; height: 200px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-default); display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 12px; font-family: var(--font-mono);">
+        Product Hero
+      </div>
+    </div>
+
+    <!-- Trust Bar -->
+    <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); border-bottom: 1px solid var(--border-subtle);">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: var(--radius-full); background: var(--bg-tertiary);"></div>
+        <div>
+          <div class="wf-block" style="width: 80px; height: 8px; margin-bottom: 4px;"></div>
+          <div class="wf-block" style="width: 60px; height: 6px;"></div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: var(--radius-full); background: var(--bg-tertiary);"></div>
+        <div>
+          <div class="wf-block" style="width: 80px; height: 8px; margin-bottom: 4px;"></div>
+          <div class="wf-block" style="width: 60px; height: 6px;"></div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: var(--radius-full); background: var(--bg-tertiary);"></div>
+        <div>
+          <div class="wf-block" style="width: 80px; height: 8px; margin-bottom: 4px;"></div>
+          <div class="wf-block" style="width: 60px; height: 6px;"></div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: var(--radius-full); background: var(--bg-tertiary);"></div>
+        <div>
+          <div class="wf-block" style="width: 80px; height: 8px; margin-bottom: 4px;"></div>
+          <div class="wf-block" style="width: 60px; height: 6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Title -->
+    <div style="padding: var(--space-xl) var(--space-lg) var(--space-md);">
+      <div class="wf-block" style="width: 120px; height: 8px; margin-bottom: 8px; background: var(--accent-primary); opacity: 0.3;"></div>
+      <div class="wf-block" style="width: 250px; height: 16px;"></div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="wf-product-grid">
+      <div class="wf-product-item"></div>
+      <div class="wf-product-item"></div>
+      <div class="wf-product-item"></div>
+      <div class="wf-product-item"></div>
+    </div>
+  </div>
+
+  <div class="insight" style="margin-top: var(--space-2xl);">
+    <div class="insight-label">📱 Mobilní chování</div>
+    <h4>Responzivní strategie</h4>
+    <p>
+      <strong>Desktop</strong> — 4-sloupcová produktová mřížka, sticky header s cart preview, sidebar filtry.<br>
+      <strong>Tablet</strong> — 2-sloupcová mřížka, filtry v bottom sheet, collapsible nav.<br>
+      <strong>Mobile</strong> — 1-sloupcová mřížka s horizontálním scrollem pro „doporučené", sticky bottom bar s košíkem, hamburger menu s full-screen overlay.
+    </p>
+  </div>
+</section>
+
+<!-- 08: SITE MAP -->
+<section class="section" id="sitemap">
+  <div class="section-label">08 — Mapa stránek</div>
+  <div class="section-title">Struktura webu</div>
+  <div class="section-desc">Logická hierarchie stránek optimalizovaná pro UX i SEO.</div>
+
+  <div class="grid-2">
+    <div>
+      <div class="swatch-group-title">Hlavní navigace</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="component-card"><h4>🏠 Domů</h4><p>Hero, trust, doporučené produkty, novinky</p></div>
+        <div class="component-card"><h4>🛒 Obchod</h4><p>Kategorie: Mini PC, Konzole, Příslušenství + filtry</p></div>
+        <div class="component-card"><h4>📄 Produkt Detail</h4><p>Galerie, specs tabulka, recenze, related products</p></div>
+        <div class="component-card"><h4>💳 Košík & Checkout</h4><p>Shrnutí, doprava, platba — single-page flow</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="swatch-group-title">Sekundární stránky</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="component-card"><h4>ℹ️ O nás</h4><p>Příběh značky, hodnoty, proč minicomputer</p></div>
+        <div class="component-card"><h4>📞 Kontakt</h4><p>Formulář, mapa, telefon, e-mail</p></div>
+        <div class="component-card"><h4>❓ FAQ</h4><p>Accordion s nejčastějšími dotazy</p></div>
+        <div class="component-card"><h4>👤 Můj účet</h4><p>Objednávky, adresy, sledování zásilky</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09: MOTION & INTERACTION -->
+<section class="section" id="motion">
+  <div class="section-label">09 — Motion & Interakce</div>
+  <div class="section-title">Pohyb, který prodává</div>
+  <div class="section-desc">Animace nejsou dekorace — jsou nástroj UX. Každý pohyb má účel: navigovat, informovat, potěšit.</div>
+
+  <div class="grid-3">
+    <div class="component-card">
+      <h4>Hover Glow</h4>
+      <p>Produktové karty dostávají cyan border-glow při hoveru. Subtle translateY(-4px) pro pocit „zvednutí".</p>
+      <div style="margin-top: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">
+        transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      </div>
+    </div>
+    <div class="component-card">
+      <h4>Page Load</h4>
+      <p>Staggered fade-up animace pro sekce při scrollu. Každá sekce se odkryje s 100ms zpožděním.</p>
+      <div style="margin-top: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">
+        IntersectionObserver + animation-delay
+      </div>
+    </div>
+    <div class="component-card">
+      <h4>Cart Feedback</h4>
+      <p>Při přidání do košíku — icon bounce + count badge animace. Okamžitý feedback bez page reload.</p>
+      <div style="margin-top: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">
+        scale(1.2) → scale(1) • 300ms ease
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10: IMPLEMENTATION NOTES -->
+<section class="section" id="implementation">
+  <div class="section-label">10 — Implementace</div>
+  <div class="section-title">Technické poznámky</div>
+  <div class="section-desc">Doporučení pro implementaci designového systému v praxi.</div>
+
+  <div class="grid-2">
+    <div class="component-card">
+      <h4>🔧 Tech Stack doporučení</h4>
+      <p>
+        <strong>Framework:</strong> Next.js / Nuxt.js nebo headless WooCommerce<br>
+        <strong>Styling:</strong> Tailwind CSS s custom config na design tokeny<br>
+        <strong>Animace:</strong> Framer Motion / GSAP<br>
+        <strong>Platforma:</strong> Stávající WooCommerce lze přestylovat custom tématem
+      </p>
+    </div>
+    <div class="component-card">
+      <h4>⚡ Performance cíle</h4>
+      <p>
+        <strong>LCP:</strong> < 2.5s (optimalizované obrázky, lazy load)<br>
+        <strong>FID:</strong> < 100ms<br>
+        <strong>CLS:</strong> < 0.1<br>
+        <strong>Lighthouse:</strong> 90+ na mobilu
+      </p>
+    </div>
+    <div class="component-card">
+      <h4>🌐 SEO & Lokalizace</h4>
+      <p>
+        Plně v češtině. Strukturovaná data pro produkty (Schema.org Product). Open Graph pro sdílení. Kanonické URL, hreflang pokud přibude EN verze.
+      </p>
+    </div>
+    <div class="component-card">
+      <h4>♿ Přístupnost</h4>
+      <p>
+        WCAG 2.1 AA minimum. Kontrastní poměr 4.5:1+ pro text. Focus stavy na všech interaktivních prvcích. Keyboard navigace v celém checkout flow.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer-note">
+  <strong>Minicomputer.cz — Visual Design Book v1.1</strong><br>
+  Vytvořeno jako základ pro redesign e-shopu • Únor 2025 • WCAG + CRO update<br>
+  <span style="margin-top: 8px; display: inline-block;">Připraveno k implementaci — barvy, typo, komponenty a layout principy</span>
+</div>
+
+</body>
+</html>
